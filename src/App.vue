@@ -22,13 +22,13 @@
       </nav>
 
       <div class="container results">
-         <div class="columns">
+         <div class="columns is-multiline tracks">
            <div
             class="column"
             v-for="(track, index) in tracks"
             :key="index"
           >
-            {{ track.name }} - {{ track.artists[0].name }}
+            <pm-track :track="track" />
           </div>
          </div>
 
@@ -45,12 +45,14 @@
 import trackService from './services/tracks';
 import PmFooter from './components/layout/Footer.vue';
 import PmHeader from './components/layout/Header.vue';
+import PmTrack from './components/Track.vue';
 
 export default {
   name: 'app',
   components: {
     PmHeader,
-    PmFooter
+    PmFooter,
+    PmTrack
   },
   data() {
     return {
@@ -83,5 +85,12 @@ export default {
 
   .results {
     margin-top: 50px;
+  }
+
+  .tracks {
+    // display: grid;
+    // grid-template-columns: repeat(auto-fill, minmax(500px, 1fr));
+    // grid-template-rows: repeat(auto-fill, minmax(200px, 1fr));
+    // overflow-y: auto;
   }
 </style>
