@@ -1,28 +1,87 @@
 <template>
   <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png">
-    <HelloWorld msg="Welcome to Your Vue.js App"/>
+    <pm-header />
+
+    <div class="section">
+      <nav class="nav has-shadow">
+        <div class="container">
+          <input
+            type="text"
+            class="input is-large"
+            placeholder="Search"
+            v-model="searchQuery"
+          >
+          <a
+            class="button is-info is-large"
+            @click="search"
+          >
+            Search songs
+          </a>
+          <a class="button is-danger is-large">&times;</a>
+        </div>
+      </nav>
+
+      <div class="container results">
+         <div class="columns">
+           <div
+            class="column"
+            v-for="(track, index) in tracks"
+            :key="index"
+          >
+            {{ track.name }} - {{ track.artists[0].name }}
+          </div>
+         </div>
+
+         <span>{{ searchMessage }}</span>
+      </div>
+    </div>
+
+    <pm-footer />
   </div>
 </template>
 
+
 <script>
-import HelloWorld from './components/HelloWorld.vue'
+import trackService from './services/tracks';
+import PmFooter from './components/layout/Footer.vue';
+import PmHeader from './components/layout/Header.vue';
 
 export default {
   name: 'app',
   components: {
-    HelloWorld
+    PmHeader,
+    PmFooter
+  },
+  data() {
+    return {
+      searchQuery: '',
+      tracks: []
+    }
+  },
+  methods: {
+    search() {
+      if (!this.searchQuery) {
+        return;
+      }
+      trackService.search(this.searchQuery)
+        .then((data) => {
+          this.tracks = data.tracks.items;
+        });
+    }
+  },
+  computed: {
+    searchMessage() {
+      return `${this.tracks.length} song found`;
+    }
   }
 }
 </script>
 
-<style>
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
+
+<style lang="scss">
+  @import './styles.scss';
+
+  .results {
+    margin-top: 50px;
+  }
 </style>
